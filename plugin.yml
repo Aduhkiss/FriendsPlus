@@ -1,0 +1,7 @@
+name: FriendsPlus
+main: me.atticusthecoder.friendsplus.FriendsPlus
+version: 1.0
+commands:
+  friend:
+    aliases: ["f"]
+    description: Main command
