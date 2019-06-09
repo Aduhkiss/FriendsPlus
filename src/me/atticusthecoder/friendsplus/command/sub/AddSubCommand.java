@@ -10,6 +10,8 @@ import me.atticusthecoder.friendsplus.api.PlayerManager;
 import me.atticusthecoder.friendsplus.command.SubCommand;
 import me.atticusthecoder.friendsplus.object.FriendRequest;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class AddSubCommand extends SubCommand {
 	
@@ -75,7 +77,14 @@ public class AddSubCommand extends SubCommand {
 			caller.sendMessage(ChatColor.GREEN + "You have sent a friend request to " + target + "! They have 5 minutes to accept it!");
 			PlayerManager.get().getPlayerData(target).addFriendRequest(caller.getName());
 			
-			PlayerManager.get().getPlayerData(target).getPlayer().sendMessage(ChatColor.GREEN + caller.getName() + " sent you a friend request! Run " + ChatColor.YELLOW + "/f add " + caller.getName() + ChatColor.GREEN + " to accept!");
+			// Change this to use Bukkit code, instead of our own code
+			Player theTarget = Bukkit.getPlayer(target);
+			
+			theTarget.sendMessage(ChatColor.GREEN + caller.getName() + " sent you a friend request!");
+			
+			TextComponent txt = new TextComponent(ChatColor.GREEN + "" + ChatColor.BOLD + "[CLICK TO ACCEPT!]");
+			txt.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f add " + caller.getName()));
+			theTarget.spigot().sendMessage(txt);
 			
 			caller.sendMessage(ChatColor.BLUE + "--------------------------------------------");
 			return;
