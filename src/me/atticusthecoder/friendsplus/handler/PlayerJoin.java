@@ -38,17 +38,27 @@ public class PlayerJoin implements Listener {
 			List<String> friendsFound = (List<String>) DataHandler.getInstance().getFriendData().getList("players." + e.getPlayer().getUniqueId() + ".friends");
 			
 			PlayerManager.get().playerDataList().add(new PlayerData(e.getPlayer(), friendsFound));
+			
+			// Also fix the issue where we were not keeping track of the friend requests toggle setting
+			if(DataHandler.getInstance().getFriendData().getBoolean("players." + e.getPlayer().getUniqueId() + ".requests")) {
+				PlayerManager.get().getPlayerData(e.getPlayer().getName()).enableRequests();
+			} else {
+				PlayerManager.get().getPlayerData(e.getPlayer().getName()).disableRequests();
+			}
 		}
 	}
 	
 	@EventHandler
 	public void friendJoin(PlayerJoinEvent e) {
-		List<Friend> friends = PlayerManager.get().getPlayerData(e.getPlayer().getName()).getFriends();
-		
-		for(Friend f : friends) {
-			if(f.isOnline()) {
-				Bukkit.getPlayer(f.getName()).sendMessage(ChatColor.AQUA + "Your friend " + e.getPlayer().getName() + " has joined.");
+		try {
+			List<Friend> friends = PlayerManager.get().getPlayerData(e.getPlayer().getName()).getFriends();
+			
+			for(Friend f : friends) {
+				if(f.isOnline()) {
+					Bukkit.getPlayer(f.getName()).sendMessage(ChatColor.AQUA + "Your friend " + e.getPlayer().getName() + " has joined.");
+				}
 			}
+		} catch(NullPointerException ex) {
 		}
 	}
 }
